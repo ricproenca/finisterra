@@ -1,0 +1,23 @@
+{
+  "tropical-ocean": "0x67C9C8",
+  "temperate-ocean": "0x67A2C9",
+  "arctic-ocean": "0x3859B5",
+  "glacier": "0xFFFFFF",
+  "snow": "0xEEEEEE",
+  "cold-desert": "0xCCE6DC",
+  "tundra": "0xB3BDA2",
+  "taiga-frontier": "0x7D8A60",
+  "taiga": "0x466B33",
+  "taiga-rainforest": "0x26570D",
+  "temperate-desert": "0xEAF2B3",
+  "temperate-grassland": "0xBBD47D",
+  "temperate-frontier": "0xA5BF63",
+  "temperate-forest": "0x83A137",
+  "temperate-rainforest": "0x728A36",
+  "hot-desert": "0xE8DE99",
+  "hot-savanna": "0xD2DBA4",
+  "tropical-frontier": "0xB6DB74",
+  "tropical-forest": "0x8CC94F",
+  "tropical-rainforest": "0x84D631",
+  "void": "0xFF69B4"
+}

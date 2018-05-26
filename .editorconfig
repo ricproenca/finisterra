@@ -1,0 +1,36 @@
+# http://editorconfig.org
+
+# A special property that should be specified at the top of the file outside of
+# any sections. Set to true to stop .editor config file search on current file
+root = true
+
+[*]
+# Indentation style (tab, space)
+indent_style = space
+
+# Indentation size in single-spaced characters (integer, tab)
+indent_size = 2
+
+# Line ending file format (lf, crlf, cr)
+end_of_line = crlf
+
+# File character encoding (latin1, utf-8, utf-16be, utf-16le)
+charset = utf-8
+
+# Denotes whether to trim whitespace at the end of lines (true, false)
+trim_trailing_whitespace = true
+
+max_line_length = 120
+
+# Denotes whether file should end with a newline (true, false)
+insert_final_newline = true
+
+[*.md]
+indent_style = spaces
+indent_size = 2
+max_line_length = 0
+trim_trailing_whitespace = true
+
+[Makefile]
+indent_style = tab
+indent_size = 4
