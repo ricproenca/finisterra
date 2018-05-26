@@ -1,4 +1,4 @@
-import { weightedMean } from '../utils/MathHelper';
+import { weightedMean, scale } from '../utils/MathHelper';
 
 let MAX = -9999;
 let MIN = 9999;
@@ -25,10 +25,10 @@ const logmaxmin = (text) => {
   console.log(`${text} [${MIN}, ${MAX}] in ${STOP - START} ms`);
 };
 
-const sumOctave = (simplexNoise, numIterations, x, y, persistence, scale, low, high) => {
+const sumOctave = (simplexNoise, numIterations, x, y, persistence, fScale, low, high) => {
   let maxAmp = 0;
   let amp = 1;
-  let freq = scale;
+  let freq = fScale;
   let noise = 0;
 
   // add successively smaller, higher-frequency terms
@@ -107,7 +107,7 @@ const organicNoiseGenerator = (simplexNoise, noiseConfig, dimensions) => {
 // 1.0 is equality
 // 2.0 will double the contribution of mapA to the result
 // 0.5 will do the exact opposite
-const combineMaps = (dimensions, mapA, mapB, weight = 1) => {
+const combineMaps = (dimensions, mapA, mapB, weight = 1, low = -1, high = 1) => {
   resetmaxmin();
 
   const map = [];
@@ -116,7 +116,10 @@ const combineMaps = (dimensions, mapA, mapB, weight = 1) => {
     for (let y = 0; y < dimensions.height; y++) {
       const a = mapA[x][y];
       const b = mapB[x][y];
-      const value = weightedMean(a, b, weight);
+      let value = weightedMean(a, b, weight);
+
+      if (value > high) value = high;
+      if (value < low) value = low;
 
       setmaxmin(value);
       map[x][y] = value;
@@ -127,5 +130,28 @@ const combineMaps = (dimensions, mapA, mapB, weight = 1) => {
   return map;
 };
 
-export { combineMaps, organicNoiseGenerator, scaledNoiseGenerator };
-export default { combineMaps, organicNoiseGenerator, scaledNoiseGenerator };
+const generateVerticalGradient = (dim, x1, x2, value1, value2) => {
+  resetmaxmin();
+
+  const map = [];
+  for (let x = 0; x < dim.width; x++) {
+    map[x] = [];
+    for (let y = 0; y < dim.height; y++) {
+      const value = scale(y, x1, x2, value1, value2);
+
+      setmaxmin(value);
+      map[x][y] = value;
+    }
+  }
+
+  logmaxmin('Vertical Gradient Noises');
+  return map;
+};
+
+export { combineMaps, organicNoiseGenerator, scaledNoiseGenerator, generateVerticalGradient };
+export default {
+  combineMaps,
+  organicNoiseGenerator,
+  scaledNoiseGenerator,
+  generateVerticalGradient,
+};

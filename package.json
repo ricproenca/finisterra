@@ -1,7 +1,7 @@
 {
-  "name": "carvoeiro",
+  "name": "finisterra",
   "version": "0.0.1",
-  "description": "Carvoeiro - Pixi.js 2D World Generator",
+  "description": "finisterra 2D World Generator",
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --open --progress --color --mode development --content-base dist/",

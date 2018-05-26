@@ -4,13 +4,13 @@
     "persistence": 0.5,
     "scale": 0.007,
     "low": -1,
-    "high": 1.5
-  },
-  "scaledNoise": {
-    "xFrequency": 0.002,
-    "yFrequency": 0.002
+    "high": 1
   },
   "combineMaps": {
-    "weight": 1
+    "weight": 0.8
+  },
+  "temperatureMap": {
+    "offset": 0.25,
+    "multiplier": 0.5
   }
 }
