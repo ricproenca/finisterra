@@ -4,7 +4,7 @@
 
 ## Simplex Noise
 
-The various implementations provide a noise function that takes a coordinate and returns a floating-point noise value between -1 and 1, inclusive, where coordinates that are close to each other have similar values.
+* [Perlin Noise](https://flafla2.github.io/2014/08/09/perlinnoise.html)
 
 ## Map generator
 

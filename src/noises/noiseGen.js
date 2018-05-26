@@ -130,7 +130,7 @@ const combineMaps = (dimensions, mapA, mapB, weight = 1, low = -1, high = 1) => 
   return map;
 };
 
-const generateVerticalGradient = (dim, x1, x2, value1, value2) => {
+const generateSouthToNorthGradient = (dim, x1, x2, value1, value2) => {
   resetmaxmin();
 
   const map = [];
@@ -144,14 +144,39 @@ const generateVerticalGradient = (dim, x1, x2, value1, value2) => {
     }
   }
 
-  logmaxmin('Vertical Gradient Noises');
+  logmaxmin('Vertical South to North Gradient Noise');
   return map;
 };
 
-export { combineMaps, organicNoiseGenerator, scaledNoiseGenerator, generateVerticalGradient };
+const generateNorthToSouthGradient = (dim, x1, x2, value1, value2) => {
+  resetmaxmin();
+
+  const map = [];
+  for (let x = 0; x < dim.width; x++) {
+    map[x] = [];
+    for (let y = 0; y < dim.height; y++) {
+      const value = scale(y, x2, x1, value1, value2);
+
+      setmaxmin(value);
+      map[x][y] = value;
+    }
+  }
+
+  logmaxmin('Vertical North to South Gradient Noise');
+  return map;
+};
+
+export {
+  combineMaps,
+  organicNoiseGenerator,
+  scaledNoiseGenerator,
+  generateSouthToNorthGradient,
+  generateNorthToSouthGradient,
+};
 export default {
   combineMaps,
   organicNoiseGenerator,
   scaledNoiseGenerator,
-  generateVerticalGradient,
+  generateSouthToNorthGradient,
+  generateNorthToSouthGradient,
 };
