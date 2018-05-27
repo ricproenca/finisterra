@@ -7,7 +7,7 @@ import { oahuTheme } from '../themes';
 
 class ElevationMap {
   constructor(dimensions, settings) {
-    console.info('GENERATE ELEVATION MAP');
+    console.info('\nGENERATE ELEVATION MAP');
     const scaledRngGenerator = new MersenneTwister(settings.scaledNoise.seed);
     const organicRngGenerator = new MersenneTwister(settings.organicNoise.seed);
 

@@ -16,5 +16,39 @@
     "combineMaps": {
       "weight": 1.25
     }
+  },
+  "temperature": {
+    "organicNoise": {
+      "seed": 9753186420,
+      "octaves": 16,
+      "persistence": 0.5,
+      "scale": 0.007,
+      "low": -1,
+      "high": 1
+    },
+    "combineMaps": {
+      "weight": 0.8
+    },
+    "heatMap": {
+      "offset": 0.25,
+      "multiplier": 0.5
+    }
+  },
+  "precipitation": {
+    "organicNoise": {
+      "seed": 8642097531,
+      "octaves": 16,
+      "persistence": 0.5,
+      "scale": 0.007,
+      "low": -1,
+      "high": 1
+    },
+    "combineMaps": {
+      "weight": 0.8
+    },
+    "rainMap": {
+      "offset": 0.25,
+      "multiplier": 0.5
+    }
   }
 }
