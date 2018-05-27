@@ -66,20 +66,23 @@ class PixiMapRenderer {
     console.log(`${mapName} rendered`, stop - start, 'ms');
   }
 
-  drawRiverTiles(riverTiles) {
+  renderRiverMap(riverTiles, color, mapName) {
+    const start = Date.now();
+    const graphics = new PIXI.Graphics();
+
     for (let i = 0; i < riverTiles.length; i++) {
       const tile = riverTiles[i];
-      this._app.renderer.beginPath();
-      this._app.renderer.fillStyle = 'rgba(50,110,255, 0.8)';
-      this._app.renderer.rect(
+      graphics.beginFill(color, 1);
+      graphics.drawRect(
         tile.x * this._tileSize,
         tile.y * this._tileSize,
         this._tileSize,
         this._tileSize,
       );
-      this._app.renderer.fill();
-      this._app.renderer.closePath();
     }
+    this._app.stage.addChild(graphics);
+    const stop = Date.now();
+    console.log(`${mapName} rendered`, stop - start, 'ms');
   }
 
   drawVector(x, y, vector) {

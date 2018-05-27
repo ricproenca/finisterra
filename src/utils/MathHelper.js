@@ -22,7 +22,9 @@ const getRandomInt = (min, max) => Math.floor(mersenne.random() * (max - min + 1
 
 const weightedMean = (a, b, weight) => (a * weight + b * 1 / weight) / 2;
 
-export { distance, getRandomInt, lerp, lerpColor, scale, weightedMean };
+const vectorLength = vector => Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+
+export { distance, getRandomInt, lerp, lerpColor, scale, vectorLength, weightedMean };
 
 export default {
   distance,
@@ -30,5 +32,6 @@ export default {
   lerp,
   lerpColor,
   scale,
+  vectorLength,
   weightedMean,
 };

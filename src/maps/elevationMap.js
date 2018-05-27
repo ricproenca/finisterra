@@ -1,7 +1,7 @@
 import MersenneTwister from 'mersenne-twister';
 import SimplexNoise from 'simplex-noise';
 
-import { scaledNoiseGenerator, organicNoiseGenerator, combineMaps } from '../noises/noiseGen';
+import { scaledNoiseGenerator, organicNoiseGenerator, combineMaps } from '../effects/noiseGen';
 
 import { oahuTheme } from '../themes';
 

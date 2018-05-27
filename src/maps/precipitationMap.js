@@ -5,7 +5,7 @@ import {
   generateNorthToSouthGradient,
   organicNoiseGenerator,
   combineMaps,
-} from '../noises/noiseGen';
+} from '../effects/noiseGen';
 
 import { precipitationTheme } from '../themes';
 

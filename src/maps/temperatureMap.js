@@ -5,7 +5,7 @@ import {
   generateSouthToNorthGradient,
   organicNoiseGenerator,
   combineMaps,
-} from '../noises/noiseGen';
+} from '../effects/noiseGen';
 
 import { temperatureTheme } from '../themes';
 

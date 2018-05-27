@@ -8,7 +8,7 @@
     "autoResize": true
   },
   "map": {
-    "tileSize": 8,
+    "tileSize": 1,
     "width": 600,
     "height": 600
   }
