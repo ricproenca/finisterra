@@ -25,7 +25,7 @@ class Eroder {
     // are prone to ending in the small dips created by the erosion drops
 
     // river pass
-    for (let i = 0; i < 400; i++) {
+    for (let i = 0; i < 200; i++) {
       const result = this.flow(
         getRandomInt(0, this.dim.width),
         getRandomInt(0, this.dim.height),
@@ -39,9 +39,19 @@ class Eroder {
       }
     }
 
+    // erosion pass
+    for (let i = 0; i < 15000; i++) {
+      const result = this.flow(
+        getRandomInt(0, this.dim.width),
+        getRandomInt(0, this.dim.height),
+        0.005,
+        false,
+        this.map,
+      );
+    }
+
     const finish = Date.now();
-    console.log('eroder completed in', finish - start, 'ms ');
-    console.log('riverTiles', allRiverTiles.length);
+    console.log(`eroder completed ${allRiverTiles.length} tiles in ${finish - start} ms`);
     return allRiverTiles;
   }
 
@@ -163,7 +173,7 @@ class Eroder {
 
       let next = self.chooseDirection(momentum);
 
-      const maxTries = 10;
+      const maxTries = 2;
       let tries = 0;
       // flow in another direction if we've already flown here before
       while (xyKey(x + next.x, y + next.y) in immune && ++tries < maxTries) {
