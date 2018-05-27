@@ -1,0 +1,20 @@
+{
+  "elevation": {
+    "scaledNoise": {
+      "seed": 1357924680,
+      "xFrequency": 0.005,
+      "yFrequency": 0.005
+    },
+    "organicNoise": {
+      "seed": 2468013579,
+      "octaves": 16,
+      "persistence": 0.4,
+      "scale": 0.007,
+      "low": -1,
+      "high": 1.5
+    },
+    "combineMaps": {
+      "weight": 1.25
+    }
+  }
+}

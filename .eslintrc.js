@@ -18,5 +18,6 @@ module.exports = {
     'no-console': 0,
     'no-plusplus': 0,
     'no-mixed-operators': 0,
+    'class-methods-use-this': 0,
   },
 };

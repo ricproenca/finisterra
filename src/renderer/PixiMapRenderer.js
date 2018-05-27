@@ -63,7 +63,7 @@ class PixiMapRenderer {
     }
     this._app.stage.addChild(graphics);
     const stop = Date.now();
-    console.log(`${mapName} map rendered`, stop - start, 'ms');
+    console.log(`${mapName} rendered`, stop - start, 'ms');
   }
 
   drawRiverTiles(riverTiles) {
