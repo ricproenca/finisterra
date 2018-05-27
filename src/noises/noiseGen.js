@@ -144,7 +144,7 @@ const generateSouthToNorthGradient = (dim, x1, x2, value1, value2) => {
     }
   }
 
-  logmaxmin('Vertical South to North Gradient Noise');
+  logmaxmin('vertical (S->N) gradient noise');
   return map;
 };
 
@@ -162,7 +162,7 @@ const generateNorthToSouthGradient = (dim, x1, x2, value1, value2) => {
     }
   }
 
-  logmaxmin('Vertical North to South Gradient Noise');
+  logmaxmin('vertical (N->S) gradient noise');
   return map;
 };
 
