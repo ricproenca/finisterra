@@ -198,7 +198,7 @@ class Eroder {
       here < this.map[x + 1][y] * threshold &&
       here < this.map[x - 1][y] * threshold &&
       here < this.map[x][y + 1] * threshold &&
-      here < this.map[x][y - 1] * threshold // TODO: change y+1 to y-1
+      here < this.map[x][y - 1] * threshold
     ) {
       return true;
     }
@@ -212,7 +212,7 @@ class Eroder {
       here > this.map[x + 1][y] * threshold &&
       here > this.map[x - 1][y] * threshold &&
       here > this.map[x][y + 1] * threshold &&
-      here > this.map[x][y - 1] * threshold // TODO: change y+1 to y-1
+      here > this.map[x][y - 1] * threshold
     ) {
       return true;
     }
@@ -222,7 +222,7 @@ class Eroder {
 
   // deposit sediment
   deposit(x, y, amount) {
-    const currTile = this.map[x][y];
+    let currTile = this.map[x][y];
 
     const neighbors = [{ x: x + 1, y }, { x: x - 1, y }, { x, y: y + 1 }, { x, y: y - 1 }];
 
@@ -244,15 +244,15 @@ class Eroder {
 
     // only deposit up to the highest neighbor's height
     if (highestNeighbor) {
-      if (highestNeighorValue > currTile.value) {
-        const maxFillAmount = highestNeighorValue - currTile.value;
+      if (highestNeighorValue > currTile) {
+        const maxFillAmount = highestNeighorValue - currTile;
 
         if (amount < maxFillAmount) {
           // console.log('filling amount', amount)
-          currTile.value += amount;
+          currTile += amount;
         } else {
           // console.log('max amount', maxFillAmount)
-          currTile.value += maxFillAmount;
+          currTile += maxFillAmount;
         }
       }
     }

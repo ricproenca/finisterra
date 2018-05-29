@@ -25,6 +25,8 @@
 
 ### biomes map
 
+https://azgaar.wordpress.com/2017/06/30/biomes-generation-and-rendering/
+
 ### flora map
 
 ### rivers system

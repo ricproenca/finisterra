@@ -24,19 +24,20 @@ const rainMap = new PrecipitationMap(appConfig.map, mapsConfig.precipitation, he
 
 const biomeMap = new BiomeMap(appConfig.map, heightMap.map, heatMap.map, rainMap.map);
 
-// const floraMap = new FloraMap(appConfig.map, heightMap.map, heatMap.map, rainMap.map);
+const floraMap = new FloraMap(appConfig.map, heightMap.map, heatMap.map, rainMap.map);
 
-const slopeMap = new SlopeMap(appConfig.map, heightMap.map);
-const eroder = new Eroder(appConfig.map, slopeMap, heightMap.map);
-const rivers = eroder.applyErosion();
+console.log('floramap', floraMap.map);
+// const slopeMap = new SlopeMap(appConfig.map, heightMap.map);
+// const eroder = new Eroder(appConfig.map, slopeMap, heightMap.map);
+// const rivers = eroder.applyErosion();
 
 console.info('\n ### RENDER MAPS ###');
 // app.renderNoiseMap(heightMap.map, heightMap.theme, heightMap.name);
 // app.renderNoiseMap(heatMap.map, heatMap.theme, heatMap.name);
 // app.renderNoiseMap(rainMap.map, rainMap.theme, rainMap.name);
 app.renderFlatMap(biomeMap.map, biomeMap.theme, biomeMap.name);
-// app.renderFlatMap(floraMap.map, floraMap.theme, floraMap.name);
+app.renderFlatMap(floraMap.map, floraMap.theme, floraMap.name);
 
-if (typeof rivers !== 'undefined') {
-  app.renderRiverMap(rivers, 0x326eff, 'RIVERS MAP');
-}
+// if (typeof rivers !== 'undefined') {
+//   app.renderRiverMap(rivers, 0x326eff, 'RIVERS MAP');
+// }
