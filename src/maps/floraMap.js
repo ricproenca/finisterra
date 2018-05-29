@@ -93,13 +93,24 @@ const classifyFlora = (elevation, temperature, precipitation) => {
   return flora;
 };
 
+const keyify = (x, y) => `${x},${y}`;
+
 class FloraMap {
   constructor(dimensions, elevationMap, temperatureMap, precipitationMap) {
     console.info('\nGENERATE FLORA MAP');
     const START = Date.now();
 
-    const poisson = new Poisson([dimensions.width, dimensions.height], 5, 10, 10);
+    const poisson = new Poisson([dimensions.width, dimensions.height], 2, 10, 10);
     const points = poisson.fill();
+
+    const keyPoints = {};
+
+    points.forEach((point) => {
+      /* eslint no-bitwise: 0 */
+      keyPoints[keyify(~~point[0], ~~point[1])] = 'superarid';
+    });
+
+    console.log('keyPoints', keyPoints);
 
     this._floraMap = [];
     for (let x = 0; x < dimensions.width; x++) {
@@ -112,18 +123,12 @@ class FloraMap {
         const p = precipitationMap[x][y];
 
         const biomeType = classifyFlora(e, t, p);
-        if (biomeType === 'superhumid') {
-          for (let z = 0; z < points.length; z++) {
-            /* eslint no-bitwise: 0 */
-            const pointX = ~~points[z][0];
-            const pointY = ~~points[z][1];
-            if (x === pointX && y === pointY) {
-              this._floraMap[x][y] = 'tree';
-            }
-          }
+        if (biomeType === 'superarid' && keyPoints[keyify(x, y)] === 'superarid') {
+          this._floraMap[x][y] = 'tree';
         }
       }
     }
+
 
     const STOP = Date.now();
     console.log(`flora map generated in ${STOP - START} ms`);

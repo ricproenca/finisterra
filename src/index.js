@@ -26,7 +26,6 @@ const biomeMap = new BiomeMap(appConfig.map, heightMap.map, heatMap.map, rainMap
 
 const floraMap = new FloraMap(appConfig.map, heightMap.map, heatMap.map, rainMap.map);
 
-console.log('floramap', floraMap.map);
 // const slopeMap = new SlopeMap(appConfig.map, heightMap.map);
 // const eroder = new Eroder(appConfig.map, slopeMap, heightMap.map);
 // const rivers = eroder.applyErosion();

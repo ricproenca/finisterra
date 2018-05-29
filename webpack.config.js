@@ -43,7 +43,7 @@ const config = {
     }),
     new webpack.optimize.OccurrenceOrderPlugin(false),
     new HtmlWebpackPlugin({
-      title: 'Carvoeiro',
+      title: 'Finisterra',
       cache: false,
       minify: { collapseWhitespace: true },
       hash: true,
