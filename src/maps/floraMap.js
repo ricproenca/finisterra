@@ -110,8 +110,6 @@ class FloraMap {
       keyPoints[keyify(~~point[0], ~~point[1])] = 'superarid';
     });
 
-    console.log('keyPoints', keyPoints);
-
     this._floraMap = [];
     for (let x = 0; x < dimensions.width; x++) {
       this._floraMap[x] = [];

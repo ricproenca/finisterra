@@ -10,15 +10,14 @@ const allEvar = {};
 
 class Eroder {
   constructor(dimensions, slopeMap, map) {
-    console.info('\nGENERATE EROSION');
+    console.info('\nGENERATE ERODER FX');
     this.dim = dimensions;
     this.slopeMap = slopeMap;
     this.map = map;
   }
 
   applyErosion() {
-    console.info('\nAPPLY EROSION TO MAP');
-    const start = Date.now();
+    const START = Date.now();
     const allRiverTiles = [];
 
     // river pass needs to run before erosion pass, otherwise the rivers
@@ -50,8 +49,8 @@ class Eroder {
       );
     }
 
-    const finish = Date.now();
-    console.log(`eroder completed ${allRiverTiles.length} tiles in ${finish - start} ms`);
+    const END = Date.now();
+    console.log(`erosion completed ${allRiverTiles.length} tiles in ${END - START} ms`);
     return allRiverTiles;
   }
 

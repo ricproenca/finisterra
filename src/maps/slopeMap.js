@@ -1,6 +1,8 @@
 class SlopeMap {
   constructor(dimensions, map) {
     console.info('\nGENERATE SLOPE MAP');
+    const START = Date.now();
+
     this._dim = dimensions;
     this._map = [];
     for (let i = 0; i < dimensions.width; i++) {
@@ -11,6 +13,8 @@ class SlopeMap {
         this._map[i][j] = { x: sx, y: sy };
       }
     }
+    const STOP = Date.now();
+    console.log(`slope map generated in ${STOP - START} ms`);
   }
 
   setTile(x, y, object) {

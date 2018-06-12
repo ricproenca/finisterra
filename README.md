@@ -1,10 +1,15 @@
 # finisterra
 
-2D World Generator
+## Intro: 2D World Generator using noise functions
 
-## Simplex Noise
+* [Making maps with noise functions] (https://www.redblobgames.com/maps/terrain-from-noise/)
+
+
+### Noise functions
 
 * [Perlin Noise](https://flafla2.github.io/2014/08/09/perlinnoise.html)
+* [Simplex Noise] (https://en.wikipedia.org/wiki/Simplex_noise)
+
 
 ## Map generator
 
@@ -12,7 +17,6 @@
 
 * [Working with simplex noise](https://cmaher.github.io/posts/working-with-simplex-noise/)
 * [Noise introduction](https://www.redblobgames.com/articles/noise/introduction.html)
-* [Terrain from Noise](https://www.redblobgames.com/maps/terrain-from-noise/)
 
 ### precipitation map
 
