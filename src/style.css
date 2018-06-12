@@ -3,29 +3,3 @@ body {
   overflow: hidden;
   padding: 0;
 }
-
-biomeColors {
-  --tropical-ocean: #67C9C8;
-  --temperate-ocean: #67A2C9;
-  --arctic-ocean: #3859B5;
-  --glacier: #FFFFFF;
-  --snow: #EEEEEE;
-  --cold-desert: #CCE6DC;
-  --tundra: #B3BDA2;
-  --taiga-frontier: #7D8A60;
-  --taiga: #466B33;
-  --taiga-rainforest: #26570D;
-  --temperate-desert: #EAF2B3;
-  --temperate-grassland: #BBD47D;
-  --temperate-frontier: #A5BF63;
-  --temperate-forest: #83A137;
-  --temperate-rainforest: #728A36;
-  --hot-desert: #E8DE99;
-  --hot-savanna: #D2DBA4;
-  --tropical-frontier: #B6DB74;
-  --tropical-forest: #8CC94F;
-  --tropical-rainforest: #84D631;
-  --void: #FF69B4;
-}
-
-

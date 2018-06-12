@@ -40,7 +40,7 @@ app.renderFlatMap(biomeMap.map, biomeMap.theme, biomeMap.name);
 // app.renderFlatMap(floraMap.map, floraMap.theme, floraMap.name);
 
 if (typeof rivers !== 'undefined') {
-  app.renderRiverMap(rivers, 0x326eff, 'RIVERS MAP');
+  app.renderRiverMap(rivers, floraMap.theme.river, 'RIVERS MAP');
 }
 
 const STOP = Date.now();

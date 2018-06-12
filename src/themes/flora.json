@@ -1,5 +1,6 @@
 {
   "vegetation": "0x46902F",
   "tree": "0xFF0000",
-  "rock": "0x66666"
+  "rock": "0x66666",
+  "river": "0x326eff"
 }
