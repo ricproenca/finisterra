@@ -17,7 +17,7 @@ const classifyBiome = (elevation, temperature, precipitation) => {
     // land biomes
     if (temperature < -0.25) {
       // the chilly biomes
-      if (precipitation > -1.0) {
+      if (precipitation > -1.1) {
         biome = 'cold-desert';
       }
       if (precipitation > -0.25) {
@@ -36,7 +36,7 @@ const classifyBiome = (elevation, temperature, precipitation) => {
 
     if (temperature > 0.25) {
       // the hot biomes
-      if (precipitation > -1) {
+      if (precipitation > -1.1) {
         biome = 'hot-desert';
       }
       if (precipitation > -0.25) {
@@ -55,7 +55,7 @@ const classifyBiome = (elevation, temperature, precipitation) => {
 
     if (temperature <= 0.25 && temperature >= -0.25) {
       // the temperate biomes
-      if (precipitation > -1) {
+      if (precipitation > -1.1) {
         biome = 'temperate-desert';
       }
       if (precipitation > -0.25) {

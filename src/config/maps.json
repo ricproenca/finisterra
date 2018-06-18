@@ -1,12 +1,12 @@
 {
   "elevation": {
     "scaledNoise": {
-      "seed": 1357924680,
+      "seed": null,
       "xFrequency": 0.005,
       "yFrequency": 0.005
     },
     "organicNoise": {
-      "seed": 2468013579,
+      "seed": null,
       "octaves": 16,
       "persistence": 0.4,
       "scale": 0.007,
@@ -19,7 +19,7 @@
   },
   "temperature": {
     "organicNoise": {
-      "seed": 9753186420,
+      "seed": null,
       "octaves": 16,
       "persistence": 0.5,
       "scale": 0.007,
@@ -36,7 +36,7 @@
   },
   "precipitation": {
     "organicNoise": {
-      "seed": 8642097531,
+      "seed": null,
       "octaves": 16,
       "persistence": 0.5,
       "scale": 0.007,

@@ -17,7 +17,7 @@ const classifyFlora = (elevation, temperature, precipitation) => {
     // land floras
     if (temperature < -0.25) {
       // the chilly floras
-      if (precipitation > -1.0) {
+      if (precipitation > -1.1) {
         flora = 'superarid';
       }
       if (precipitation > -0.25) {
@@ -36,7 +36,7 @@ const classifyFlora = (elevation, temperature, precipitation) => {
 
     if (temperature > 0.25) {
       // the hot floras
-      if (precipitation > -1.0) {
+      if (precipitation > -1.1) {
         flora = 'superarid';
       }
       if (precipitation > -0.25) {
@@ -55,7 +55,7 @@ const classifyFlora = (elevation, temperature, precipitation) => {
 
     if (temperature <= 0.25 && temperature >= -0.25) {
       // the temperate floras
-      if (precipitation > -1.0) {
+      if (precipitation > -1.1) {
         flora = 'superarid';
       }
       if (precipitation > -0.25) {
