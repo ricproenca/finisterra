@@ -5,14 +5,28 @@ import { floraTheme } from '../themes';
 const keyify = (x, y) => `${x},${y}`;
 
 class FloraMap {
-  constructor(dimensions, elevationMap, temperatureMap, precipitationMap) {
+  constructor(dimensions, floraBiomes, elevationMap, temperatureMap, precipitationMap) {
     console.info('\nGENERATE FLORA MAP');
     const START = Date.now();
 
+    console.log('floraBiomes', floraBiomes);
     this._keyPoints = {};
 
     this._createFloraMap(dimensions);
-    this._generateBiomeFlora('superarid', dimensions, elevationMap, temperatureMap, precipitationMap);
+
+    Object.entries(floraBiomes).forEach((entry) => {
+      const [biomeType, pdsSettings] = entry;
+      const pds = new Poisson(
+        [dimensions.width, dimensions.height],
+        pdsSettings.sampleMinDistance, pdsSettings.sampleMaxDistance, pdsSettings.maxTries,
+      );
+      const points = pds.fill();
+
+      this._generateBiomeFlora(
+        biomeType, points, dimensions,
+        elevationMap, temperatureMap, precipitationMap,
+      );
+    });
 
     const STOP = Date.now();
     console.log(`flora map generated in ${STOP - START} ms`);
@@ -40,10 +54,11 @@ class FloraMap {
     }
   }
 
-  _generateBiomeFlora(biomeName, dimensions, elevationMap, temperatureMap, precipitationMap) {
+  _generateBiomeFlora(
+    biomeName, points, dimensions,
+    elevationMap, temperatureMap, precipitationMap,
+  ) {
     let PDS_POINTS = 0;
-    const pds = new Poisson([dimensions.width, dimensions.height], 30, 50, 50);
-    const points = pds.fill();
 
     points.forEach((point) => {
       const x = ~~point[0];

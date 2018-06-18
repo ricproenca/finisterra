@@ -25,7 +25,10 @@ const rainMap = new PrecipitationMap(appConfig.map, mapsConfig.precipitation, he
 
 const biomeMap = new BiomeMap(appConfig.map, heightMap.map, heatMap.map, rainMap.map);
 
-const floraMap = new FloraMap(appConfig.map, heightMap.map, heatMap.map, rainMap.map);
+const floraMap = new FloraMap(
+  appConfig.map, mapsConfig.flora,
+  heightMap.map, heatMap.map, rainMap.map,
+);
 
 const slopeMap = new SlopeMap(appConfig.map, heightMap.map);
 const eroder = new Eroder(appConfig.map, slopeMap, heightMap.map);

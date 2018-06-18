@@ -50,5 +50,27 @@
       "offset": 0.25,
       "multiplier": 0.5
     }
+  },
+  "flora": {
+    "superarid": {
+      "sampleMinDistance": 30,
+      "sampleMaxDistance": 50,
+      "maxTries": 50
+    },
+    "arid": {
+      "sampleMinDistance": 20,
+      "sampleMaxDistance": 40,
+      "maxTries": 50
+    },
+    "humid": {
+      "sampleMinDistance": 10,
+      "sampleMaxDistance": 30,
+      "maxTries": 100
+    },
+    "superhumid": {
+      "sampleMinDistance": 3,
+      "sampleMaxDistance": 15,
+      "maxTries": 1
+    }
   }
 }
