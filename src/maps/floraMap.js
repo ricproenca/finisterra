@@ -9,7 +9,6 @@ class FloraMap {
     console.info('\nGENERATE FLORA MAP');
     const START = Date.now();
 
-    console.log('floraBiomes', floraBiomes);
     this._keyPoints = {};
 
     this._createFloraMap(dimensions);

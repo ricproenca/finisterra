@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { drawGraphicTile } from './tile';
 
 class PixiMapRenderer {
   constructor(canvasSettings, pixiSettings, mapSettings) {
@@ -21,14 +22,6 @@ class PixiMapRenderer {
     this._resize();
   }
 
-  // get stage() {
-  //   return this._app.stage;
-  // }
-
-  // get view() {
-  //   return this._app.view;
-  // }
-
   renderNoiseMap(map, theme, mapName) {
     const start = Date.now();
     const graphics = new PIXI.Graphics();
@@ -37,8 +30,11 @@ class PixiMapRenderer {
       for (let y = 0; y < map[x].length; y++) {
         const tile = map[x][y];
         const color = theme.getHex(tile);
-        graphics.beginFill(color, 1);
-        graphics.drawRect(x * this._tileSize, y * this._tileSize, this._tileSize, this._tileSize);
+        drawGraphicTile(
+          graphics,
+          x * this._tileSize, y * this._tileSize, this._tileSize, this._tileSize,
+          color,
+        );
       }
     }
     this._app.stage.addChild(graphics);
@@ -50,14 +46,18 @@ class PixiMapRenderer {
     const start = Date.now();
     const graphics = new PIXI.Graphics();
 
-    for (let i = 0; i < this._mapWidth; i++) {
-      for (let j = 0; j < this._mapHeight; j++) {
-        const tile = map[i][j];
+    for (let x = 0; x < this._mapWidth; x++) {
+      for (let y = 0; y < this._mapHeight; y++) {
+        const tile = map[x][y];
         if (tile && tile !== 'nothing') {
           // i.e if tile.flora !=='nothing'
           const color = colors[tile];
-          graphics.beginFill(color, 1);
-          graphics.drawRect(i * this._tileSize, j * this._tileSize, this._tileSize, this._tileSize);
+
+          drawGraphicTile(
+            graphics,
+            x * this._tileSize, y * this._tileSize, this._tileSize, this._tileSize,
+            color,
+          );
         }
       }
     }
@@ -72,12 +72,10 @@ class PixiMapRenderer {
 
     for (let i = 0; i < riverTiles.length; i++) {
       const tile = riverTiles[i];
-      graphics.beginFill(color, 1);
-      graphics.drawRect(
-        tile.x * this._tileSize,
-        tile.y * this._tileSize,
-        this._tileSize,
-        this._tileSize,
+      drawGraphicTile(
+        graphics,
+        tile.x * this._tileSize, tile.y * this._tileSize, this._tileSize, this._tileSize,
+        color,
       );
     }
     this._app.stage.addChild(graphics);

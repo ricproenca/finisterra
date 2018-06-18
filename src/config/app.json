@@ -1,14 +1,14 @@
 {
   "canvas": {
-    "width": 600,
-    "height": 600
+    "width": 1024,
+    "height": 768
   },
   "renderer": {
     "backgroundColor": "0x000000",
     "autoResize": true
   },
   "map": {
-    "tileSize": 1,
+    "tileSize": 4,
     "width": 600,
     "height": 600
   }
