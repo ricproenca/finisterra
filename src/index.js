@@ -37,7 +37,7 @@ console.info('\n ### RENDER MAPS ###');
 // app.renderNoiseMap(heatMap.map, heatMap.theme, heatMap.name);
 // app.renderNoiseMap(rainMap.map, rainMap.theme, rainMap.name);
 app.renderFlatMap(biomeMap.map, biomeMap.theme, biomeMap.name);
-// app.renderFlatMap(floraMap.map, floraMap.theme, floraMap.name);
+app.renderFlatMap(floraMap.map, floraMap.theme, floraMap.name);
 
 if (typeof rivers !== 'undefined') {
   app.renderRiverMap(rivers, floraMap.theme.river, 'RIVERS MAP');
