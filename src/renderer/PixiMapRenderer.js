@@ -1,4 +1,6 @@
 import * as PIXI from 'pixi.js';
+import Viewport from 'pixi-viewport';
+
 import { drawGraphicTile } from './tile';
 
 class PixiMapRenderer {
@@ -12,6 +14,16 @@ class PixiMapRenderer {
     this._mapWidth = mapSettings.width;
     this._mapHeight = mapSettings.height;
 
+    // viewport settings
+    this._pixiViewport = new Viewport({
+      screenWidth: window.innerWidth,
+      screenHeight: window.innerHeight,
+      worldWidth: mapSettings.width * mapSettings.tileSize,
+      worldHeight: mapSettings.height * mapSettings.tileSize,
+    });
+
+    this._camera = null;
+
     // Application settings
     this._app = new PIXI.Application(this._width, this._height, pixiSettings);
     this._app.stage.name = 'STAGE';
@@ -19,12 +31,15 @@ class PixiMapRenderer {
     // Append and add resize listener
     document.body.appendChild(this._app.view);
     window.addEventListener('resize', this._resize.bind(this));
+
+    this._viewport = this._app.stage.addChild(this._pixiViewport);
     this._resize();
   }
 
   renderNoiseMap(map, theme, mapName) {
     const start = Date.now();
     const graphics = new PIXI.Graphics();
+    graphics.name = mapName;
 
     for (let x = 0; x < map.length; x++) {
       for (let y = 0; y < map[x].length; y++) {
@@ -37,7 +52,7 @@ class PixiMapRenderer {
         );
       }
     }
-    this._app.stage.addChild(graphics);
+    this._viewport.addChild(graphics);
     const stop = Date.now();
     console.log(`${mapName} map rendered`, stop - start, 'ms');
   }
@@ -45,6 +60,7 @@ class PixiMapRenderer {
   renderFlatMap(map, colors, mapName) {
     const start = Date.now();
     const graphics = new PIXI.Graphics();
+    graphics.name = mapName;
 
     for (let x = 0; x < this._mapWidth; x++) {
       for (let y = 0; y < this._mapHeight; y++) {
@@ -61,7 +77,7 @@ class PixiMapRenderer {
         }
       }
     }
-    this._app.stage.addChild(graphics);
+    this._viewport.addChild(graphics);
     const stop = Date.now();
     console.log(`${mapName} rendered`, stop - start, 'ms');
   }
@@ -69,6 +85,7 @@ class PixiMapRenderer {
   renderRiverMap(riverTiles, color, mapName) {
     const start = Date.now();
     const graphics = new PIXI.Graphics();
+    graphics.name = mapName;
 
     for (let i = 0; i < riverTiles.length; i++) {
       const tile = riverTiles[i];
@@ -78,9 +95,23 @@ class PixiMapRenderer {
         color,
       );
     }
-    this._app.stage.addChild(graphics);
+    this._viewport.addChild(graphics);
     const stop = Date.now();
     console.log(`${mapName} rendered`, stop - start, 'ms');
+  }
+
+  renderCamera() {
+    this._camera = this._pixiViewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
+    this._camera.name = 'MARK';
+    this._camera.tint = 0x551a8b;
+    this._camera.width = this._tileSize;
+    this._camera.height = this._tileSize;
+
+    this._camera.x = (this._mapWidth * this._tileSize) / 2;
+    this._camera.y = (this._mapHeight * this._tileSize) / 2;
+
+    this._viewport.addChild(this._camera);
+    this._pixiViewport.follow(this._camera).wheel();
   }
 
   drawVector(x, y, vector) {
@@ -94,16 +125,17 @@ class PixiMapRenderer {
   }
 
   _resize() {
-    const ratio = Math.min(window.innerWidth / this._width, window.innerHeight / this._height);
+    // const ratio = Math.min(window.innerWidth / this._width, window.innerHeight / this._height);
 
-    this._app.stage.scale.x = ratio;
-    this._app.stage.scale.y = ratio;
+    // this._app.stage.scale.x = ratio;
+    // this._app.stage.scale.y = ratio;
 
     this._app.renderer.resize(window.innerWidth, window.innerHeight);
+    this._viewport.resize(window.innerWidth, window.innerHeight);
 
-    this._app.renderer.view.style.position = 'absolute';
-    this._app.renderer.view.style.top = '0px';
-    this._app.renderer.view.style.left = '0px';
+  //   this._app.renderer.view.style.position = 'absolute';
+  //   this._app.renderer.view.style.top = '0px';
+  //   this._app.renderer.view.style.left = '0px';
   }
 }
 

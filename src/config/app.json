@@ -1,7 +1,7 @@
 {
   "canvas": {
-    "width": 1024,
-    "height": 768
+    "width": 1280,
+    "height": 720
   },
   "renderer": {
     "backgroundColor": "0x000000",

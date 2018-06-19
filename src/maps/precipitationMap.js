@@ -51,6 +51,9 @@ class PrecipitationMap {
         if (h > 0.0) {
           value -= (h - settings.rainMap.offset) * settings.rainMap.multiplier;
         }
+
+        value = value < -1 ? -1 : value;
+        value = value > 1 ? 1 : value;
         this._precipitationMap[i][j] = value;
       }
     }

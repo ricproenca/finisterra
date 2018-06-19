@@ -50,6 +50,7 @@
   "dependencies": {
     "express": "^4.16.3",
     "mersenne-twister": "^1.1.0",
+    "pixi-viewport": "^2.7.0",
     "pixi.js": "^4.7.3",
     "poisson-disk-sampling": "^1.0.2",
     "simplex-noise": "^2.4.0",

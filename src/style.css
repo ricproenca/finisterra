@@ -1,5 +1,27 @@
-body {
+/* body {
+  background-color: blueviolet;
   margin: 0;
   overflow: hidden;
   padding: 0;
+} */
+
+/* to remove the top and left whitespace */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* just to be sure these are full screen*/
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+/* left horizontal, top vertical */
+canvas {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
