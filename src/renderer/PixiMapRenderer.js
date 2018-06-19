@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import Viewport from 'pixi-viewport';
+import Camera from './camera';
 
 import { drawGraphicTile } from './tile';
 
@@ -14,16 +14,6 @@ class PixiMapRenderer {
     this._mapWidth = mapSettings.width;
     this._mapHeight = mapSettings.height;
 
-    // viewport settings
-    this._pixiViewport = new Viewport({
-      screenWidth: window.innerWidth,
-      screenHeight: window.innerHeight,
-      worldWidth: mapSettings.width * mapSettings.tileSize,
-      worldHeight: mapSettings.height * mapSettings.tileSize,
-    });
-
-    this._camera = null;
-
     // Application settings
     this._app = new PIXI.Application(this._width, this._height, pixiSettings);
     this._app.stage.name = 'STAGE';
@@ -32,7 +22,9 @@ class PixiMapRenderer {
     document.body.appendChild(this._app.view);
     window.addEventListener('resize', this._resize.bind(this));
 
-    this._viewport = this._app.stage.addChild(this._pixiViewport);
+    // Camera
+    const camera = new Camera(mapSettings);
+    this._world = this._app.stage.addChild(camera.viewport);
     this._resize();
   }
 
@@ -52,7 +44,7 @@ class PixiMapRenderer {
         );
       }
     }
-    this._viewport.addChild(graphics);
+    this._world.addChild(graphics);
     const stop = Date.now();
     console.log(`${mapName} map rendered`, stop - start, 'ms');
   }
@@ -77,7 +69,7 @@ class PixiMapRenderer {
         }
       }
     }
-    this._viewport.addChild(graphics);
+    this._world.addChild(graphics);
     const stop = Date.now();
     console.log(`${mapName} rendered`, stop - start, 'ms');
   }
@@ -95,23 +87,9 @@ class PixiMapRenderer {
         color,
       );
     }
-    this._viewport.addChild(graphics);
+    this._world.addChild(graphics);
     const stop = Date.now();
     console.log(`${mapName} rendered`, stop - start, 'ms');
-  }
-
-  renderCamera() {
-    this._camera = this._pixiViewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
-    this._camera.name = 'MARK';
-    this._camera.tint = 0x551a8b;
-    this._camera.width = this._tileSize;
-    this._camera.height = this._tileSize;
-
-    this._camera.x = (this._mapWidth * this._tileSize) / 2;
-    this._camera.y = (this._mapHeight * this._tileSize) / 2;
-
-    this._viewport.addChild(this._camera);
-    this._pixiViewport.follow(this._camera).wheel();
   }
 
   drawVector(x, y, vector) {
@@ -131,7 +109,7 @@ class PixiMapRenderer {
     // this._app.stage.scale.y = ratio;
 
     this._app.renderer.resize(window.innerWidth, window.innerHeight);
-    this._viewport.resize(window.innerWidth, window.innerHeight);
+    this._world.resize(window.innerWidth, window.innerHeight);
 
   //   this._app.renderer.view.style.position = 'absolute';
   //   this._app.renderer.view.style.top = '0px';
