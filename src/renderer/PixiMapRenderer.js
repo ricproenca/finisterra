@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import Camera from './camera';
 
 import { drawGraphicTile } from './tile';
 
@@ -15,15 +14,18 @@ class PixiMapRenderer {
     this._mapHeight = mapSettings.height;
 
     // Application settings
-    this._app = new PIXI.Application(this._width, this._height, pixiSettings);
+    // this._app = new PIXI.Application(this._width, this._height, pixiSettings);
+    this._app = new PIXI.Application(window.innerWidth, window.innerHeight, pixiSettings);
     this._app.stage.name = 'STAGE';
 
     // Append and add resize listener
     document.body.appendChild(this._app.view);
     window.addEventListener('resize', this._resize.bind(this));
 
-    // Camera
-    const camera = new Camera(mapSettings);
+    this._resize();
+  }
+
+  addCamera(camera) {
     this._world = this._app.stage.addChild(camera.viewport);
     this._resize();
   }
@@ -109,7 +111,14 @@ class PixiMapRenderer {
     // this._app.stage.scale.y = ratio;
 
     this._app.renderer.resize(window.innerWidth, window.innerHeight);
-    this._world.resize(window.innerWidth, window.innerHeight);
+    if (this._world) {
+      this._world.resize(
+        window.innerWidth,
+        window.innerHeight,
+        this._mapWidth * this._tileSize,
+        this._mapHeight * this._tileSize,
+      );
+    }
 
   //   this._app.renderer.view.style.position = 'absolute';
   //   this._app.renderer.view.style.top = '0px';

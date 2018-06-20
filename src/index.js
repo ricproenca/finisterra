@@ -4,6 +4,7 @@ import appConfig from './config/app.json';
 import mapsConfig from './config/maps.json';
 
 import PixiMapRenderer from './renderer/PixiMapRenderer';
+import Camera from './renderer/camera';
 
 import ElevationMap from './maps/elevationMap';
 import TemperatureMap from './maps/temperatureMap';
@@ -17,7 +18,11 @@ import BiomeMap from './maps/biomeMap';
 const START = Date.now();
 
 const app = new PixiMapRenderer(appConfig.canvas, appConfig.renderer, appConfig.map);
+const camera = new Camera(appConfig.map);
+camera.addViewPoint();
+app.addCamera(camera);
 
+// BUILD MAPS
 const heightMap = new ElevationMap(appConfig.map, mapsConfig.elevation);
 
 const heatMap = new TemperatureMap(appConfig.map, mapsConfig.temperature, heightMap.map);
