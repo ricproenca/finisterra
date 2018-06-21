@@ -1,20 +1,16 @@
+/* eslint no-unused-vars: 0 */
 import * as PIXI from 'pixi.js';
 import Viewport from 'pixi-viewport';
 
 import Keyboard from './keyboard';
 
-const VELOCITY = 10;
+const VELOCITY = 5;
 
 class Camera {
   constructor(mapSettings) {
     this._tileSize = mapSettings.tileSize;
     this._mapWidth = mapSettings.width;
     this._mapHeight = mapSettings.height;
-
-    this._minViewPointX = 0;
-    this._minViewPointY = 0;
-    this._maxViewPointX = this._tileSize * this._mapWidth - (window.innerHeight / 2);
-    this._maxViewPointY = this._tileSize * this._mapHeight;
 
     this._setViewport(mapSettings);
   }
@@ -28,11 +24,24 @@ class Camera {
     this._setControls();
 
     this._viewport.addChild(this._viewPoint);
-    const followSettings = {
-      speed: 0,
-      radius: 100,
-    };
-    this._viewport.follow(this._viewPoint, followSettings);
+    this._viewport.follow(this._viewPoint).bounce();
+  }
+
+  drawBorder() {
+    this._drawLine(0, 0, this.viewport.worldWidth, 10);
+    this._drawLine(0, this.viewport.worldHeight - 10, this.viewport.worldWidth, 10);
+    this._drawLine(0, 0, 10, this.viewport.worldHeight);
+    this._drawLine(this.viewport.worldWidth - 10, 0, 10, this.viewport.worldHeight);
+  }
+
+  _drawLine(x, y, width, height, color = 0xff0000) {
+    const line = this._viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
+    line.tint = color;
+    line.x = x;
+    line.y = y;
+    line.width = width;
+    line.height = height;
+    line.name = 'BORDER';
   }
 
   _setViewport(mapSettings) {
@@ -41,11 +50,10 @@ class Camera {
       screenHeight: window.innerHeight,
       worldWidth: mapSettings.width * mapSettings.tileSize,
       worldHeight: mapSettings.height * mapSettings.tileSize,
-      threshold: 10,
     };
-    this._viewport = new Viewport(viewportSettings);
+    this._viewport = new PIXI.extras.Viewport(viewportSettings);
     this._viewport.name = 'WORLD';
-    console.warn('viewportSettings', viewportSettings);
+    console.warn('viewport', this._viewport);
     window.viewport = this._viewport;
   }
 
