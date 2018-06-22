@@ -1,6 +1,9 @@
 import * as PIXI from 'pixi.js';
 
 import { drawGraphicTile } from './tile';
+import Keyboard from './keyboard';
+
+const VELOCITY = 64;
 
 class PixiMapRenderer {
   constructor(canvasSettings, pixiSettings, mapSettings) {
@@ -18,16 +21,50 @@ class PixiMapRenderer {
     this._app = new PIXI.Application(window.innerWidth, window.innerHeight, pixiSettings);
     this._app.stage.name = 'STAGE';
 
+    this._mapBounds = {
+      left: 0,
+      right: this._mapHeight * this._tileSize - this._tileSize,
+      top: 0,
+      bottom: this._mapWidth * this._tileSize - this._tileSize,
+    };
+
+    this._cameraBounds = {
+      right: this._mapBounds.right - (window.innerWidth / 2),
+      top: this._mapBounds.top + (window.innerHeight / 2),
+      bottom: this._mapBounds.bottom - (window.innerHeight / 2),
+    };
+
+    console.warn('camera', this._cameraBounds);
+
     // Append and add resize listener
     document.body.appendChild(this._app.view);
+
+    this._world = this._app.stage.addChild(new PIXI.Container());
     window.addEventListener('resize', this._resize.bind(this));
 
     this._resize();
+
+    const ticker = PIXI.ticker.shared;
+    ticker.add(this._update.bind(this));
   }
 
-  addCamera(camera) {
-    this._world = this._app.stage.addChild(camera.viewport);
-    this._resize();
+  renderPlayer() {
+    const emptySprite = new PIXI.Sprite(PIXI.Texture.WHITE);
+    this._player = this._world.addChild(emptySprite);
+    this._player.name = 'PLAYER';
+    this._player.tint = 0x551a8b;
+    this._player.width = this._tileSize;
+    this._player.height = this._tileSize;
+    this._player.x = (this._mapWidth * this._tileSize) / 2;
+    this._player.y = (this._mapHeight * this._tileSize) / 2;
+  }
+
+  setCamera() {
+    this._app.stage.position.x = this._app.renderer.width / 2;
+    this._app.stage.position.y = this._app.renderer.height / 2;
+    this._app.stage.pivot.x = this._player.position.x;
+    this._app.stage.pivot.y = this._player.position.y;
+    this.keyboard = new Keyboard();
   }
 
   renderNoiseMap(map, theme, mapName) {
@@ -41,7 +78,10 @@ class PixiMapRenderer {
         const color = theme.getHex(tile);
         drawGraphicTile(
           graphics,
-          x * this._tileSize, y * this._tileSize, this._tileSize, this._tileSize,
+          x * this._tileSize,
+          y * this._tileSize,
+          this._tileSize,
+          this._tileSize,
           color,
         );
       }
@@ -62,10 +102,12 @@ class PixiMapRenderer {
         if (tile && tile !== 'nothing') {
           // i.e if tile.flora !=='nothing'
           const color = colors[tile];
-
           drawGraphicTile(
             graphics,
-            x * this._tileSize, y * this._tileSize, this._tileSize, this._tileSize,
+            x * this._tileSize,
+            y * this._tileSize,
+            this._tileSize,
+            this._tileSize,
             color,
           );
         }
@@ -85,7 +127,10 @@ class PixiMapRenderer {
       const tile = riverTiles[i];
       drawGraphicTile(
         graphics,
-        tile.x * this._tileSize, tile.y * this._tileSize, this._tileSize, this._tileSize,
+        tile.x * this._tileSize,
+        tile.y * this._tileSize,
+        this._tileSize,
+        this._tileSize,
         color,
       );
     }
@@ -105,24 +150,48 @@ class PixiMapRenderer {
   }
 
   _resize() {
-    // const ratio = Math.min(window.innerWidth / this._width, window.innerHeight / this._height);
-
-    // this._app.stage.scale.x = ratio;
-    // this._app.stage.scale.y = ratio;
+    const ratio = Math.min(window.innerWidth / this._width, window.innerHeight / this._height);
+    this._app.stage.scale.x = ratio;
+    this._app.stage.scale.y = ratio;
 
     this._app.renderer.resize(window.innerWidth, window.innerHeight);
-    if (this._world) {
-      this._world.resize(
-        window.innerWidth,
-        window.innerHeight,
-        this._mapWidth * this._tileSize,
-        this._mapHeight * this._tileSize,
-      );
+    this._app.renderer.view.style.position = 'absolute';
+    this._app.renderer.view.style.top = '0px';
+    this._app.renderer.view.style.left = '0px';
+  }
+
+  _update() {
+    if (this.keyboard.left.pressed && this._player.x > this._mapBounds.left) {
+      if (this._player.x > this._cameraBounds.left && this._player.x < this._cameraBounds.right) {
+        this._app.stage.pivot.x = this._player.position.x;
+      }
+      this._player.x -= VELOCITY;
     }
 
-  //   this._app.renderer.view.style.position = 'absolute';
-  //   this._app.renderer.view.style.top = '0px';
-  //   this._app.renderer.view.style.left = '0px';
+    if (this.keyboard.right.pressed && this._player.x < this._mapBounds.right) {
+      if (this._player.x > this._cameraBounds.left && this._player.x < this._cameraBounds.right) {
+        this._app.stage.pivot.x = this._player.position.x;
+      }
+      this._player.x += VELOCITY;
+    }
+
+    if (this.keyboard.up.pressed && this._player.y > this._mapBounds.top) {
+      if (this._player.y > this._cameraBounds.top && this._player.y < this._cameraBounds.bottom) {
+        this._app.stage.pivot.y = this._player.position.y;
+      }
+      this._player.y -= VELOCITY;
+    }
+
+    if (this.keyboard.down.pressed && this._player.y < this._mapBounds.bottom) {
+      if (this._player.y > this._cameraBounds.top && this._player.y < this._cameraBounds.bottom) {
+        this._app.stage.pivot.y = this._player.position.y;
+      }
+      this._player.y += VELOCITY;
+    }
+
+    if (this.keyboard.space.pressed) {
+      console.log('player', this._player.x, this._player.y);
+    }
   }
 }
 

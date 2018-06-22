@@ -4,7 +4,7 @@
     "height": 1080
   },
   "renderer": {
-    "backgroundColor": "0x000000",
+    "backgroundColor": "0xff00ff",
     "autoResize": true
   },
   "map": {
