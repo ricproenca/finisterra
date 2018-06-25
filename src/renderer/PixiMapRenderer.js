@@ -28,26 +28,18 @@ class PixiMapRenderer {
       bottom: this._mapWidth * this._tileSize - this._tileSize,
     };
 
-    this._cameraBounds = {
-      left: 1136,
-      right: 9600 - 1136,
-      top: 532,
-      bottom: this._mapWidth * this._tileSize - 532,
-    };
-
-    window._cameraBounds = this._cameraBounds;
-
-    console.warn('map', this._mapBounds);
-    console.warn('camera', this._cameraBounds);
-
     // Append and add resize listener
     document.body.appendChild(this._app.view);
 
     this._world = this._app.stage.addChild(new PIXI.Container());
+    this._world.position.x = this._app.renderer.width / 2;
+    this._world.position.y = this._app.renderer.height / 2;
     this._world.name = 'WORLD';
-    window.addEventListener('resize', this._resize.bind(this));
 
+    window.addEventListener('resize', this._resize.bind(this));
     this._resize();
+
+    this.keyboard = new Keyboard();
 
     const ticker = PIXI.ticker.shared;
     ticker.add(this._update.bind(this));
@@ -62,14 +54,9 @@ class PixiMapRenderer {
     this._player.height = this._tileSize;
     this._player.x = (this._mapWidth * this._tileSize) / 2;
     this._player.y = (this._mapHeight * this._tileSize) / 2;
-  }
 
-  setCamera() {
-    this._world.position.x = this._app.renderer.width / 2;
-    this._world.position.y = this._app.renderer.height / 2;
     this._world.pivot.x = this._player.position.x;
     this._world.pivot.y = this._player.position.y;
-    this.keyboard = new Keyboard();
   }
 
   renderNoiseMap(map, theme, mapName) {
@@ -154,15 +141,27 @@ class PixiMapRenderer {
     this._app.renderer.closePath(); // is this even a path? idk
   }
 
+  _setCameraBounds() {
+    this._cameraBounds = {
+      left: window.innerWidth / 2 - this._tileSize,
+      right: this._mapWidth * this._tileSize - window.innerWidth / 2 + this._tileSize,
+      top: window.innerHeight / 2 - this._tileSize,
+      bottom: this._mapHeight * this._tileSize - window.innerHeight / 2 + this._tileSize,
+    };
+    window._cameraBounds = this._cameraBounds;
+  }
+
   _resize() {
-    const ratio = Math.min(window.innerWidth / this._width, window.innerHeight / this._height);
-    this._app.stage.scale.x = ratio;
-    this._app.stage.scale.y = ratio;
+    // const ratio = Math.min(window.innerWidth / this._width, window.innerHeight / this._height);
+    // this._app.stage.scale.x = ratio;
+    // this._app.stage.scale.y = ratio;
 
     this._app.renderer.resize(window.innerWidth, window.innerHeight);
     this._app.renderer.view.style.position = 'absolute';
     this._app.renderer.view.style.top = '0px';
     this._app.renderer.view.style.left = '0px';
+
+    this._setCameraBounds();
   }
 
   _update() {
