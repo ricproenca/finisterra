@@ -148,7 +148,6 @@ class PixiMapRenderer {
       top: window.innerHeight / 2 - this._tileSize,
       bottom: this._mapHeight * this._tileSize - window.innerHeight / 2 + this._tileSize,
     };
-    window._cameraBounds = this._cameraBounds;
   }
 
   _resize() {
@@ -160,6 +159,14 @@ class PixiMapRenderer {
     this._app.renderer.view.style.position = 'absolute';
     this._app.renderer.view.style.top = '0px';
     this._app.renderer.view.style.left = '0px';
+
+    this._world.position.x = this._app.renderer.width / 2;
+    this._world.position.y = this._app.renderer.height / 2;
+
+    if (this._player) {
+      this._world.pivot.x = this._player.position.x;
+      this._world.pivot.y = this._player.position.y;
+    }
 
     this._setCameraBounds();
   }
