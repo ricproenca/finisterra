@@ -44,6 +44,7 @@ class PixiMapRenderer {
     document.body.appendChild(this._app.view);
 
     this._world = this._app.stage.addChild(new PIXI.Container());
+    this._world.name = 'WORLD';
     window.addEventListener('resize', this._resize.bind(this));
 
     this._resize();
@@ -64,10 +65,10 @@ class PixiMapRenderer {
   }
 
   setCamera() {
-    this._app.stage.position.x = this._app.renderer.width / 2;
-    this._app.stage.position.y = this._app.renderer.height / 2;
-    this._app.stage.pivot.x = this._player.position.x;
-    this._app.stage.pivot.y = this._player.position.y;
+    this._world.position.x = this._app.renderer.width / 2;
+    this._world.position.y = this._app.renderer.height / 2;
+    this._world.pivot.x = this._player.position.x;
+    this._world.pivot.y = this._player.position.y;
     this.keyboard = new Keyboard();
   }
 
@@ -167,28 +168,28 @@ class PixiMapRenderer {
   _update() {
     if (this.keyboard.left.pressed && this._player.x > this._mapBounds.left) {
       if (this._player.x > this._cameraBounds.left && this._player.x < this._cameraBounds.right) {
-        this._app.stage.pivot.x = this._player.position.x;
+        this._world.pivot.x = this._player.position.x;
       }
       this._player.x -= VELOCITY;
     }
 
     if (this.keyboard.right.pressed && this._player.x < this._mapBounds.right) {
       if (this._player.x > this._cameraBounds.left && this._player.x < this._cameraBounds.right) {
-        this._app.stage.pivot.x = this._player.position.x;
+        this._world.pivot.x = this._player.position.x;
       }
       this._player.x += VELOCITY;
     }
 
     if (this.keyboard.up.pressed && this._player.y > this._mapBounds.top) {
       if (this._player.y > this._cameraBounds.top && this._player.y < this._cameraBounds.bottom) {
-        this._app.stage.pivot.y = this._player.position.y;
+        this._world.pivot.y = this._player.position.y;
       }
       this._player.y -= VELOCITY;
     }
 
     if (this.keyboard.down.pressed && this._player.y < this._mapBounds.bottom) {
       if (this._player.y > this._cameraBounds.top && this._player.y < this._cameraBounds.bottom) {
-        this._app.stage.pivot.y = this._player.position.y;
+        this._world.pivot.y = this._player.position.y;
       }
       this._player.y += VELOCITY;
     }
