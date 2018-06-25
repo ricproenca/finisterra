@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js';
 import { drawGraphicTile } from './tile';
 import Keyboard from './keyboard';
 
-const VELOCITY = 64;
+const VELOCITY = 16;
 
 class PixiMapRenderer {
   constructor(canvasSettings, pixiSettings, mapSettings) {
@@ -29,11 +29,15 @@ class PixiMapRenderer {
     };
 
     this._cameraBounds = {
-      right: this._mapBounds.right - (window.innerWidth / 2),
-      top: this._mapBounds.top + (window.innerHeight / 2),
-      bottom: this._mapBounds.bottom - (window.innerHeight / 2),
+      left: 1136,
+      right: 9600 - 1136,
+      top: 532,
+      bottom: this._mapWidth * this._tileSize - 532,
     };
 
+    window._cameraBounds = this._cameraBounds;
+
+    console.warn('map', this._mapBounds);
     console.warn('camera', this._cameraBounds);
 
     // Append and add resize listener
