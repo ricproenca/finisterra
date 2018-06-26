@@ -10,11 +10,10 @@ import ElevationMap from './maps/elevationMap';
 import TemperatureMap from './maps/temperatureMap';
 import PrecipitationMap from './maps/precipitationMap';
 import BiomeMap from './maps/biomeMap';
-// import FloraMap from './maps/floraMap';
-// import SlopeMap from './maps/slopeMap';
+import FloraMap from './maps/floraMap';
+import SlopeMap from './maps/slopeMap';
 
-// import Eroder from './effects/eroder';
-
+import Eroder from './effects/eroder';
 
 const START = Date.now();
 console.info('\n ### START PIXI ###');
@@ -22,30 +21,31 @@ const app = new PixiMapRenderer(appConfig.canvas, appConfig.renderer, appConfig.
 
 console.info('\n ### BUILDING MAPS ###');
 const heightMap = new ElevationMap(appConfig.map, mapsConfig.elevation);
-// const heatMap = new TemperatureMap(appConfig.map, mapsConfig.temperature, heightMap.map);
-// const rainMap = new PrecipitationMap(appConfig.map, mapsConfig.precipitation, heightMap.map);
-// const biomeMap = new BiomeMap(appConfig.map, heightMap.map, heatMap.map, rainMap.map);
+const heatMap = new TemperatureMap(appConfig.map, mapsConfig.temperature, heightMap.map);
+const rainMap = new PrecipitationMap(appConfig.map, mapsConfig.precipitation, heightMap.map);
+const biomeMap = new BiomeMap(appConfig.map, heightMap.map, heatMap.map, rainMap.map);
 
-// const floraMap = new FloraMap(
-//   appConfig.map, mapsConfig.flora,
-//   heightMap.map, heatMap.map, rainMap.map,
-// );
+const floraMap = new FloraMap(
+  appConfig.map, mapsConfig.flora,
+  heightMap.map, heatMap.map, rainMap.map,
+);
 
-// const slopeMap = new SlopeMap(appConfig.map, heightMap.map);
-// const eroder = new Eroder(appConfig.map, slopeMap, heightMap.map);
-// const rivers = eroder.applyErosion();
+const slopeMap = new SlopeMap(appConfig.map, heightMap.map);
+const eroder = new Eroder(appConfig.map, slopeMap, heightMap.map);
+const rivers = eroder.applyErosion();
+const filteredRivers = eroder.filterRivers(rivers, heightMap.map, heatMap.map, rainMap.map);
 
 console.info('\n ### RENDER MAPS ###');
-app.renderNoiseMap(heightMap.map, heightMap.theme, heightMap.name);
+// app.renderNoiseMap(heightMap.map, heightMap.theme, heightMap.name);
 // app.renderNoiseMap(heatMap.southToNorthGradient, heatMap.theme, heatMap.name);
 // app.renderNoiseMap(heatMap.map, heatMap.theme, heatMap.name);
 // app.renderNoiseMap(rainMap.map, rainMap.theme, rainMap.name);
-// app.renderFlatMap(biomeMap.map, biomeMap.theme, biomeMap.name);
-// app.renderFlatMap(floraMap.map, floraMap.theme, floraMap.name);
+app.renderFlatMap(biomeMap.map, biomeMap.theme, biomeMap.name);
+app.renderFlatMap(floraMap.map, floraMap.theme, floraMap.name);
 
-// if (typeof rivers !== 'undefined') {
-//   app.renderRiverMap(rivers, floraMap.theme.river, 'RIVERS MAP');
-// }
+if (typeof rivers !== 'undefined') {
+  app.renderRiverMap(filteredRivers, floraMap.theme.river, 'RIVERS MAP');
+}
 
 app.renderPlayer();
 

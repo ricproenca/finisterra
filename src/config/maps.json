@@ -53,24 +53,24 @@
   },
   "flora": {
     "superarid": {
-      "sampleMinDistance": 30,
-      "sampleMaxDistance": 50,
-      "maxTries": 50
+      "sampleMinDistance": 10,
+      "sampleMaxDistance": 20,
+      "maxTries": 1
     },
     "arid": {
-      "sampleMinDistance": 20,
-      "sampleMaxDistance": 40,
-      "maxTries": 50
+      "sampleMinDistance": 10,
+      "sampleMaxDistance": 20,
+      "maxTries": 10
     },
     "humid": {
       "sampleMinDistance": 10,
-      "sampleMaxDistance": 30,
-      "maxTries": 100
+      "sampleMaxDistance": 20,
+      "maxTries": 25
     },
     "superhumid": {
-      "sampleMinDistance": 3,
-      "sampleMaxDistance": 15,
-      "maxTries": 1
+      "sampleMinDistance": 10,
+      "sampleMaxDistance": 20,
+      "maxTries": 50
     }
   }
 }

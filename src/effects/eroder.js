@@ -4,13 +4,15 @@
 
 import { getRandomInt, vectorLength } from '../utils/MathHelper';
 
+import classifyFlora from '../classifiers/flora';
+
 const xyKey = (x, y) => `${x},${y}`;
 
 const allEvar = {};
 
-class Eroder {
+class _Eroder {
   constructor(dimensions, slopeMap, map) {
-    console.info('\nGENERATE ERODER FX');
+    console.info('\nGENERATE _ERODER FX');
     this.dim = dimensions;
     this.slopeMap = slopeMap;
     this.map = map;
@@ -54,6 +56,21 @@ class Eroder {
     return allRiverTiles;
   }
 
+  filterRivers(rivers, heightMap, heatMap, rainMap) {
+    const filteredRivers = [];
+    for (let i = 0; i < rivers.length; i++) {
+      const riverTile = rivers[i];
+      const e = heightMap[riverTile.x][riverTile.y];
+      const t = heatMap[riverTile.x][riverTile.y];
+      const p = rainMap[riverTile.x][riverTile.y];
+      const floraType = classifyFlora(e, t, p);
+      if (floraType !== 'superarid') {
+        filteredRivers.push(riverTile);
+      }
+    }
+    return filteredRivers;
+  }
+
   flow(x, y, erosionStrength, isRiver) {
     // console.log('flow', x, y, momentum, water, particulates, curr)
     const limit = isRiver ? 300 : 100;
@@ -63,7 +80,7 @@ class Eroder {
     const riverTiles = [];
     const slopeMap = this.slopeMap;
     const self = this;
-    const isLowest = this.isLowest;
+    const _isLowest = this._isLowest;
 
     const momentum = { x: 0, y: 0 };
 
@@ -97,21 +114,21 @@ class Eroder {
       momentum.x -= slope.x;
       momentum.y -= slope.y;
 
-      if (self.isLowest(x, y, threshold)) {
+      if (self._isLowest(x, y, threshold)) {
         todo.push(() => {
-          self.deposit(x + 1, y, erosionStrength, this.map);
+          self._deposit(x + 1, y, erosionStrength, this.map);
         });
         todo.push(() => {
-          self.deposit(x - 1, y, erosionStrength, this.map);
+          self._deposit(x - 1, y, erosionStrength, this.map);
         });
         todo.push(() => {
-          self.deposit(x, y + 1, erosionStrength, this.map);
+          self._deposit(x, y + 1, erosionStrength, this.map);
         });
         todo.push(() => {
-          self.deposit(x, y - 1, erosionStrength, this.map);
+          self._deposit(x, y - 1, erosionStrength, this.map);
         });
         todo.push(() => {
-          self.deposit(x, y, erosionStrength, this.map);
+          self._deposit(x, y, erosionStrength, this.map);
         });
         dirt -= erosionStrength * 12;
         // console.log('flow concluded: arrived at lowest point')
@@ -120,21 +137,21 @@ class Eroder {
         }
       } else {
         const magnitude = vectorLength(momentum);
-        if (dirt > magnitude && !self.isHighest(x, y, 1.0)) {
+        if (dirt > magnitude && !self._isHighest(x, y, 1.0)) {
           todo.push(() => {
-            self.deposit(x + 1, y, erosionStrength, this.map);
+            self._deposit(x + 1, y, erosionStrength, this.map);
           });
           todo.push(() => {
-            self.deposit(x - 1, y, erosionStrength, this.map);
+            self._deposit(x - 1, y, erosionStrength, this.map);
           });
           todo.push(() => {
-            self.deposit(x, y + 1, erosionStrength, this.map);
+            self._deposit(x, y + 1, erosionStrength, this.map);
           });
           todo.push(() => {
-            self.deposit(x, y - 1, erosionStrength, this.map);
+            self._deposit(x, y - 1, erosionStrength, this.map);
           });
           todo.push(() => {
-            self.deposit(x, y, erosionStrength, this.map);
+            self._deposit(x, y, erosionStrength, this.map);
           });
 
           dirt -= erosionStrength * 12;
@@ -142,7 +159,7 @@ class Eroder {
           // momentum.y *= 0.99
         } else {
           todo.push(() => {
-            self.erode(x, y, erosionStrength, this.map);
+            self._erode(x, y, erosionStrength, this.map);
           });
           dirt += erosionStrength * 18;
         }
@@ -160,7 +177,7 @@ class Eroder {
         // allEvar[xyKey(x, y+1)] = true
       }
 
-      // mark the tile as immune, it cannot be eroded again this flow
+      // mark the tile as immune, it cannot be _eroded again this flow
       immune[xyKey(x, y)] = true;
 
       // console.log(momentum, magnitude, dirt)
@@ -170,14 +187,14 @@ class Eroder {
       // momentum.x *= 0.98
       // momentum.y *= 0.98
 
-      let next = self.chooseDirection(momentum);
+      let next = self._chooseDirection(momentum);
 
       const maxTries = 2;
       let tries = 0;
       // flow in another direction if we've already flown here before
       while (xyKey(x + next.x, y + next.y) in immune && ++tries < maxTries) {
         // console.log('rerolling direction due to immunity')
-        next = self.chooseDirection(momentum);
+        next = self._chooseDirection(momentum);
       }
       innerFlow(x + next.x, y + next.y);
     };
@@ -191,7 +208,7 @@ class Eroder {
     return { todo, riverTiles };
   }
 
-  isLowest(x, y, threshold) {
+  _isLowest(x, y, threshold) {
     const here = this.map[x][y];
     if (
       here < this.map[x + 1][y] * threshold &&
@@ -205,7 +222,7 @@ class Eroder {
     return false;
   }
 
-  isHighest(x, y, threshold) {
+  _isHighest(x, y, threshold) {
     const here = this.map[x][y];
     if (
       here > this.map[x + 1][y] * threshold &&
@@ -220,7 +237,7 @@ class Eroder {
   }
 
   // deposit sediment
-  deposit(x, y, amount) {
+  _deposit(x, y, amount) {
     let currTile = this.map[x][y];
 
     const neighbors = [{ x: x + 1, y }, { x: x - 1, y }, { x, y: y + 1 }, { x, y: y - 1 }];
@@ -241,7 +258,7 @@ class Eroder {
       }
     }
 
-    // only deposit up to the highest neighbor's height
+    // only _deposit up to the highest neighbor's height
     if (highestNeighbor) {
       if (highestNeighorValue > currTile) {
         const maxFillAmount = highestNeighorValue - currTile;
@@ -263,7 +280,7 @@ class Eroder {
     this.slopeMap.recalculate(x, y - 1, this.map);
   }
 
-  erode(x, y, amount) {
+  _erode(x, y, amount) {
     this.map[x][y] -= amount;
 
     if (this.slopeMap.boundsCheck(x + 1, y)) {
@@ -286,7 +303,7 @@ class Eroder {
     this.slopeMap.recalculate(x, y - 1, this.map);
   }
 
-  chooseDirection(vector) {
+  _chooseDirection(vector) {
     const direction = { x: 0, y: 0 };
 
     // commit to a direction for X, either 1 or -1 if x is above/below zero
@@ -326,4 +343,4 @@ class Eroder {
   }
 }
 
-export default Eroder;
+export default _Eroder;
