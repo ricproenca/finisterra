@@ -2,8 +2,9 @@ import * as PIXI from 'pixi.js';
 
 import { drawGraphicTile } from './tile';
 import Keyboard from './keyboard';
+import Camera from './camera';
 
-const VELOCITY = 16;
+const VELOCITY = 8;
 
 class PixiMapRenderer {
   constructor(canvasSettings, pixiSettings, mapSettings) {
@@ -17,32 +18,39 @@ class PixiMapRenderer {
     this._mapHeight = mapSettings.height;
 
     // Application settings
-    // this._app = new PIXI.Application(this._width, this._height, pixiSettings);
-    this._app = new PIXI.Application(window.innerWidth, window.innerHeight, pixiSettings);
-    this._app.stage.name = 'STAGE';
+    this._app = new PIXI.Application(this._width, this._height, pixiSettings);
+    this._app.renderer.view.style.position = 'absolute';
+    this._app.renderer.view.style.top = '0px';
+    this._app.renderer.view.style.left = '0px';
 
-    this._mapBounds = {
-      left: 0,
-      right: this._mapHeight * this._tileSize - this._tileSize,
-      top: 0,
-      bottom: this._mapWidth * this._tileSize - this._tileSize,
-    };
+    this._app.stage.name = 'STAGE';
 
     // Append and add resize listener
     document.body.appendChild(this._app.view);
-
-    this._world = this._app.stage.addChild(new PIXI.Container());
-    this._world.position.x = this._app.renderer.width / 2;
-    this._world.position.y = this._app.renderer.height / 2;
-    this._world.name = 'WORLD';
-
     window.addEventListener('resize', this._resize.bind(this));
     this._resize();
 
-    this.keyboard = new Keyboard();
-
     const ticker = PIXI.ticker.shared;
     ticker.add(this._update.bind(this));
+
+    this.keyboard = new Keyboard();
+
+    this._mapBounds = {
+      left: 0,
+      right: this._mapWidth * this._tileSize - this._tileSize,
+      top: 0,
+      bottom: this._mapHeight * this._tileSize - this._tileSize,
+    };
+
+    this._world = this._app.stage.addChild(new PIXI.Container());
+    this._world.name = 'WORLD';
+
+    this.camera = new Camera(
+      this._world,
+      this._mapWidth * this._tileSize,
+      this._mapHeight * this._tileSize,
+      this._app.renderer.screen,
+    );
   }
 
   renderPlayer() {
@@ -55,8 +63,7 @@ class PixiMapRenderer {
     this._player.x = (this._mapWidth * this._tileSize) / 2;
     this._player.y = (this._mapHeight * this._tileSize) / 2;
 
-    this._world.pivot.x = this._player.position.x;
-    this._world.pivot.y = this._player.position.y;
+    this.camera.centerOver(this._player);
   }
 
   renderNoiseMap(map, theme, mapName) {
@@ -141,68 +148,35 @@ class PixiMapRenderer {
     this._app.renderer.closePath(); // is this even a path? idk
   }
 
-  _setCameraBounds() {
-    this._cameraBounds = {
-      left: window.innerWidth / 2 - this._tileSize,
-      right: this._mapWidth * this._tileSize - window.innerWidth / 2 + this._tileSize,
-      top: window.innerHeight / 2 - this._tileSize,
-      bottom: this._mapHeight * this._tileSize - window.innerHeight / 2 + this._tileSize,
-    };
-  }
-
   _resize() {
-    // const ratio = Math.min(window.innerWidth / this._width, window.innerHeight / this._height);
-    // this._app.stage.scale.x = ratio;
-    // this._app.stage.scale.y = ratio;
-
     this._app.renderer.resize(window.innerWidth, window.innerHeight);
-    this._app.renderer.view.style.position = 'absolute';
-    this._app.renderer.view.style.top = '0px';
-    this._app.renderer.view.style.left = '0px';
-
-    this._world.position.x = this._app.renderer.width / 2;
-    this._world.position.y = this._app.renderer.height / 2;
-
-    if (this._player) {
-      this._world.pivot.x = this._player.position.x;
-      this._world.pivot.y = this._player.position.y;
+    if (this.camera) {
+      this.camera.centerOver(this._player);
     }
-
-    this._setCameraBounds();
   }
 
   _update() {
     if (this.keyboard.left.pressed && this._player.x > this._mapBounds.left) {
-      if (this._player.x > this._cameraBounds.left && this._player.x < this._cameraBounds.right) {
-        this._world.pivot.x = this._player.position.x;
-      }
       this._player.x -= VELOCITY;
     }
 
     if (this.keyboard.right.pressed && this._player.x < this._mapBounds.right) {
-      if (this._player.x > this._cameraBounds.left && this._player.x < this._cameraBounds.right) {
-        this._world.pivot.x = this._player.position.x;
-      }
       this._player.x += VELOCITY;
     }
 
     if (this.keyboard.up.pressed && this._player.y > this._mapBounds.top) {
-      if (this._player.y > this._cameraBounds.top && this._player.y < this._cameraBounds.bottom) {
-        this._world.pivot.y = this._player.position.y;
-      }
       this._player.y -= VELOCITY;
     }
 
     if (this.keyboard.down.pressed && this._player.y < this._mapBounds.bottom) {
-      if (this._player.y > this._cameraBounds.top && this._player.y < this._cameraBounds.bottom) {
-        this._world.pivot.y = this._player.position.y;
-      }
       this._player.y += VELOCITY;
     }
 
     if (this.keyboard.space.pressed) {
       console.log('player', this._player.x, this._player.y);
     }
+
+    this.camera.follow(this._player);
   }
 }
 

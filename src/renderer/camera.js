@@ -1,92 +1,99 @@
-/* eslint no-unused-vars: 0 */
-import * as PIXI from 'pixi.js';
-import Viewport from 'pixi-viewport';
-
-import Keyboard from './keyboard';
-
-const VELOCITY = 5;
-
-class Camera {
-  constructor(mapSettings) {
-    this._tileSize = mapSettings.tileSize;
-    this._mapWidth = mapSettings.width;
-    this._mapHeight = mapSettings.height;
-
-    this._setViewport(mapSettings);
+class WorldCamera {
+  constructor(world, worldWidth, worldHeight, canvas) {
+    this._world = world;
+    this.worldWidth = worldWidth;
+    this.worldHeight = worldHeight;
+    this.width = canvas.width;
+    this.height = canvas.height;
+    this._x = 0;
+    this._y = 0;
+    window.addEventListener('resize', this._resize.bind(this));
   }
 
-  get viewport() {
-    return this._viewport;
+  get x() {
+    return this._x;
   }
 
-  addViewPoint() {
-    this._setViewPoint();
-    this._setControls();
-
-    this._viewport.addChild(this._viewPoint);
-    this._viewport.follow(this._viewPoint).bounce();
+  set x(value) {
+    this._x = value;
+    this._world.x = -this._x;
   }
 
-  drawBorder() {
-    this._drawLine(0, 0, this.viewport.worldWidth, 10);
-    this._drawLine(0, this.viewport.worldHeight - 10, this.viewport.worldWidth, 10);
-    this._drawLine(0, 0, 10, this.viewport.worldHeight);
-    this._drawLine(this.viewport.worldWidth - 10, 0, 10, this.viewport.worldHeight);
+  get y() {
+    return this._y;
   }
 
-  _drawLine(x, y, width, height, color = 0xff0000) {
-    const line = this._viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
-    line.tint = color;
-    line.x = x;
-    line.y = y;
-    line.width = width;
-    line.height = height;
-    line.name = 'BORDER';
+  set y(value) {
+    this._y = value;
+    this._world.y = -this._y;
   }
 
-  _setViewport(mapSettings) {
-    const viewportSettings = {
-      screenWidth: window.innerWidth,
-      screenHeight: window.innerHeight,
-      worldWidth: mapSettings.width * mapSettings.tileSize,
-      worldHeight: mapSettings.height * mapSettings.tileSize,
-    };
-    this._viewport = new PIXI.extras.Viewport(viewportSettings);
-    this._viewport.name = 'WORLD';
-    console.warn('viewport', this._viewport);
-    window.viewport = this._viewport;
+  get centerX() {
+    return this.x + (this.width / 2);
+  }
+  get centerY() {
+    return this.y + (this.height / 2);
   }
 
-  _setViewPoint() {
-    const emptySprite = new PIXI.Sprite(PIXI.Texture.WHITE);
-    this._viewPoint = this._viewport.addChild(emptySprite);
-    this._viewPoint.name = 'CAMERA_POINT';
-    this._viewPoint.tint = 0x551a8b;
-    this._viewPoint.width = this._tileSize;
-    this._viewPoint.height = this._tileSize;
-    this._viewPoint.x = (this._mapWidth * this._tileSize) / 2;
-    this._viewPoint.y = (this._mapHeight * this._tileSize) / 2;
+  get rightInnerBoundary() {
+    return this.x + (this.width / 2) + (this.width / 4) + 8;
   }
 
-  _setControls() {
-    this.keyboard = new Keyboard();
+  get leftInnerBoundary() {
+    return this.x + (this.width / 2) - (this.width / 4);
+  }
 
-    const ticker = PIXI.ticker.shared;
-    ticker.add(() => {
-      if (this.keyboard.right.pressed) {
-        this._viewPoint.x += VELOCITY;
-      }
-      if (this.keyboard.left.pressed) {
-        this._viewPoint.x -= VELOCITY;
-      }
-      if (this.keyboard.up.pressed) {
-        this._viewPoint.y -= VELOCITY;
-      }
-      if (this.keyboard.down.pressed) {
-        this._viewPoint.y += VELOCITY;
-      }
-    });
+  get topInnerBoundary() {
+    return this.y + (this.height / 2) - (this.height / 4);
+  }
+
+  get bottomInnerBoundary() {
+    return this.y + (this.height / 2) + (this.height / 4);
+  }
+
+  follow(sprite) {
+    if (sprite.x < this.leftInnerBoundary) {
+      this.x = sprite.x - (this.width / 4);
+    }
+
+    if (sprite.y < this.topInnerBoundary) {
+      this.y = sprite.y - (this.height / 4);
+    }
+
+    if (sprite.x + sprite.width > this.rightInnerBoundary) {
+      this.x = sprite.x + sprite.width - (this.width / 4 * 3);
+    }
+
+    if (sprite.y + sprite.height > this.bottomInnerBoundary) {
+      this.y = sprite.y + sprite.height - (this.height / 4 * 3);
+    }
+
+    if (this.x < 0) {
+      this.x = 0;
+    }
+
+    if (this.y < 0) {
+      this.y = 0;
+    }
+
+    if (this.x + this.width + sprite.width > this.worldWidth) {
+      this.x = this.worldWidth - this.width;
+    }
+
+    if (this.y + this.height + sprite.height > this.worldHeight) {
+      this.y = this.worldHeight - this.height;
+    }
+  }
+
+  centerOver(sprite) {
+    this.x = (sprite.x + sprite.width / 2) - (this.width / 2);
+    this.y = (sprite.y + sprite.height / 2) - (this.height / 2);
+  }
+
+  _resize() {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
   }
 }
 
-export default Camera;
+export default WorldCamera;
